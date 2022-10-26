@@ -7,6 +7,7 @@ if it does
 destroy the session and redirect to login page
 */
 if ($_SESSION['username']){
+    session_unset();
     session_destroy();
     header ('Location: ../forms/login.html');
     exit;
