@@ -11,21 +11,32 @@ registerUser($username, $email, $password);
 function registerUser($username, $email, $password){
     //save data into the file
     $filename = '../storage/users.csv';
-    $openFile = fopen($filename, 'w');
-    fputcsv($openFile, array($username, $email, $password));
-
     // echo "OKAY";
-$openFile = fopen($filename, 'r');
-$data = fgetcsv($openFile);
-fclose($openFile);
-if ($data){
-    echo "<h1>User successfully registered</h1>" . "<a href=\"../forms/login.html\">Login here</a>";
+    
+if (userExists($email)){
+    echo "<h1>User already exist</h1>";
 }else {
-    echo 'User not registered';
+    $openFile = fopen($filename, 'a');
+    fputcsv($openFile, array($username, $email, $password));
+    fclose($openFile);
+    echo "<h1>User successfully registered</h1>" . "<a href=\"../forms/login.html\">Login here</a>";
 }
 
 
 
+}
+function userExists($email){
+    $filename = '../storage/users.csv';
+    $openFile = fopen($filename, 'r');
+    
+    while (!feof($openFile)) {
+        $user = fgetcsv($openFile);
+        if ($user[1] == $email && $user != false) {
+            return true;
+        }
+    }
+    fclose($openFile);
+    return false;
 }
 
 

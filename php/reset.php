@@ -11,23 +11,24 @@ function resetPassword($email, $newpassword){
     //open file and check if the username exist inside
     $filename = '../storage/users.csv';
     $openFile = fopen($filename, 'r');
-    $data = fgetcsv($openFile);
-
-    fclose($openFile);
     
-    $user_name = $data[0];
-    $user_email = $data[1];
-    $user_password = $data[2];
-
+while (!feof($openFile)){
+    $user = fgetcsv($openFile);
     //if it does, replace the password
-    if ($email === $user_email){
-        $openFile = fopen($filename, 'w');
-        fputcsv($openFile, array($user_name, $email, $newpassword));
+    if ($email === $user[1]){
+       $user[2] = $newpassword;
         fclose($openFile);
+        $openFile = fopen($filename, 'w');
+        fputcsv($openFile, $user);
+        fclose($openFile);
+
         echo "<h1>password reset successful</h1>"  . "<a href=\"../forms/login.html\">Login here</a>";
-    }else {
-        echo "User does not exist";
+        exit;
     }
+}
+    fclose($openFile);
+     echo "User does not exist";
+
 }
 
 
